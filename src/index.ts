@@ -1,3 +1,4 @@
+import { handlerAggregate } from "./commands/aggregate.js";
 import { handlerLogin, handlerRegister } from "./commands/auth.js";
 import {
   registerCommand,
@@ -23,6 +24,7 @@ async function main() {
   registerCommand(commandsRegistry, "register", handlerRegister);
   registerCommand(commandsRegistry, "reset", handlerReset);
   registerCommand(commandsRegistry, "users", handlerListUsers);
+  registerCommand(commandsRegistry, "agg", handlerAggregate);
 
   try {
     await runCommand(commandsRegistry, cmdName, ...cmdArgs);
