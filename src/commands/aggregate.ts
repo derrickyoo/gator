@@ -8,5 +8,5 @@ export async function handlerAggregate(cmdName: string, ...args: string[]) {
   const feedURL = args[0];
   const RSSFeed = await fetchFeed(feedURL);
 
-  // console.log(RSSFeed);
+  console.log(RSSFeed);
 }

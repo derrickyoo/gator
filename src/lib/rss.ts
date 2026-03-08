@@ -33,6 +33,43 @@ export async function fetchFeed(feedURL: string) {
   const parser = new XMLParser();
   const result = parser.parse(xml);
 
-  // TODO: build RSSFeed object
-  console.log("🚀 ~ fetchFeed ~ result:", result);
+  const channel = result.rss?.channel;
+  if (!channel) {
+    throw new Error("failed to parse channel");
+  }
+
+  if (
+    !channel.title ||
+    !channel.link ||
+    !channel.description ||
+    !channel.item
+  ) {
+    throw new Error("failed to parse channel");
+  }
+
+  const items: any[] = Array.isArray(channel.item)
+    ? channel.item
+    : [channel.item];
+
+  const rssItems: RSSItem[] = items
+    .filter(
+      (item) => item.title && item.link && item.description && item.pubDate,
+    )
+    .map((item) => ({
+      title: item.title,
+      link: item.link,
+      description: item.description,
+      pubDate: item.pubdate,
+    }));
+
+  const rssFeed: RSSFeed = {
+    channel: {
+      title: channel.title,
+      link: channel.link,
+      description: channel.description,
+      item: rssItems,
+    },
+  };
+
+  return rssFeed;
 }
