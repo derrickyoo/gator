@@ -1,5 +1,5 @@
-import { setUser } from "../config.js";
-import { createUser } from "../lib/db/queries/users.js";
+import { setUser } from "../config";
+import { createUser, getUser } from "../lib/db/queries/users";
 
 export async function handlerLogin(cmdName: string, ...args: string[]) {
   if (args.length !== 1) {
@@ -7,13 +7,13 @@ export async function handlerLogin(cmdName: string, ...args: string[]) {
   }
 
   const userName = args[0];
-  const user = await createUser(userName);
-  if (!user) {
+  const existingUser = await getUser(userName);
+  if (!existingUser) {
     throw new Error(`user ${userName} not found`);
   }
 
-  setUser(userName);
-  console.log("user login successful");
+  setUser(existingUser.name);
+  console.log("🎉 user login successful");
 }
 
 export async function handlerRegister(cmdName: string, ...args: string[]) {
@@ -28,5 +28,5 @@ export async function handlerRegister(cmdName: string, ...args: string[]) {
   }
 
   setUser(user.name);
-  console.log(`user registration successful`);
+  console.log("🎉 user registration successful");
 }
