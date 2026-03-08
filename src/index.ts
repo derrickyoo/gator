@@ -1,4 +1,4 @@
-import { handlerLogin } from "./commands/auth.js";
+import { handlerLogin, handlerRegister } from "./commands/auth.js";
 import {
   registerCommand,
   runCommand,
@@ -18,6 +18,7 @@ async function main() {
 
   const commandsRegistry: CommandsRegistry = {};
   registerCommand(commandsRegistry, "login", handlerLogin);
+  registerCommand(commandsRegistry, "register", handlerRegister);
 
   try {
     await runCommand(commandsRegistry, cmdName, ...cmdArgs);
