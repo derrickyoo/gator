@@ -7,6 +7,10 @@ export async function handlerLogin(cmdName: string, ...args: string[]) {
   }
 
   const userName = args[0];
+  const user = await createUser(userName);
+  if (!user) {
+    throw new Error(`user ${userName} not found`);
+  }
 
   setUser(userName);
   console.log("user login successful");
@@ -20,7 +24,7 @@ export async function handlerRegister(cmdName: string, ...args: string[]) {
   const userName = args[0];
   const user = await createUser(userName);
   if (!user) {
-    throw new Error(`user not found`);
+    throw new Error(`user ${userName} not found`);
   }
 
   setUser(user.name);
