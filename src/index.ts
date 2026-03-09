@@ -8,6 +8,7 @@ import {
 import {
   handlerFollow,
   handlerListFeedFollows,
+  handlerUnfollow,
 } from "./commands/feed-follows.js";
 import { handlerAddFeed, handlerListFeeds } from "./commands/feeds.js";
 import { handlerReset } from "./commands/reset.js";
@@ -46,6 +47,11 @@ async function main() {
     commandsRegistry,
     "following",
     middlewareLoggedIn(handlerListFeedFollows),
+  );
+  registerCommand(
+    commandsRegistry,
+    "unfollow",
+    middlewareLoggedIn(handlerUnfollow),
   );
 
   try {
