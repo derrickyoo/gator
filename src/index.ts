@@ -5,7 +5,7 @@ import {
   runCommand,
   type CommandsRegistry,
 } from "./commands/commands";
-import { handlerAddFeed } from "./commands/feeds.js";
+import { handlerAddFeed, handlerListFeeds } from "./commands/feeds.js";
 import { handlerReset } from "./commands/reset.js";
 import { handlerListUsers } from "./commands/users.js";
 
@@ -27,6 +27,7 @@ async function main() {
   registerCommand(commandsRegistry, "users", handlerListUsers);
   registerCommand(commandsRegistry, "agg", handlerAggregate);
   registerCommand(commandsRegistry, "addfeed", handlerAddFeed);
+  registerCommand(commandsRegistry, "feeds", handlerListFeeds);
 
   try {
     await runCommand(commandsRegistry, cmdName, ...cmdArgs);

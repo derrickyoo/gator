@@ -1,6 +1,6 @@
 import { readConfig } from "../config.js";
-import { createFeed } from "../lib/db/queries/feeds.js";
-import { getUser } from "../lib/db/queries/users.js";
+import { createFeed, getFeeds } from "../lib/db/queries/feeds.js";
+import { getUser, getUserById } from "../lib/db/queries/users.js";
 import { Feed, User } from "../lib/db/schema.js";
 
 export async function handlerAddFeed(cmdName: string, ...args: string[]) {
@@ -39,4 +39,24 @@ function printFeed(feed: Feed, user: User) {
   console.log(`* name:          ${feed.name}`);
   console.log(`* URL:           ${feed.url}`);
   console.log(`* User:          ${user.name}`);
+}
+
+export async function handlerListFeeds(_: string) {
+  const feeds = await getFeeds();
+
+  if (feeds.length === 0) {
+    console.log("feeds not found");
+    return;
+  }
+
+  console.log(`Found %d feeds:\n`, feeds.length);
+
+  for (const feed of feeds) {
+    const user = await getUserById(feed.userId);
+    if (!user) {
+      throw new Error(`failed to find user for feed ${feed.id}`);
+    }
+    printFeed(feed, user);
+    console.log(`=====================================`);
+  }
 }
