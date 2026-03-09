@@ -6,7 +6,7 @@ import { Feed, User } from "../lib/db/schema.js";
 export async function handlerAddFeed(cmdName: string, ...args: string[]) {
   const config = readConfig();
   if (args.length !== 2) {
-    throw new Error(`usage: ${cmdName} <feed_name> <url>`);
+    throw new Error(`usage: ${cmdName} <feed_name> <feed_url>`);
   }
 
   const [name, url] = args;

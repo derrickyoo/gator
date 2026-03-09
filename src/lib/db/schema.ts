@@ -47,3 +47,5 @@ export const feedFollows = pgTable(
   },
   (table) => [unique().on(table.userId, table.feedId)],
 );
+
+export type NewFeedFollow = typeof feedFollows.$inferInsert;
