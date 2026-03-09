@@ -23,3 +23,5 @@ export const feeds = pgTable("feeds", {
     .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
 });
+
+export type NewFeed = typeof feeds.$inferInsert;
