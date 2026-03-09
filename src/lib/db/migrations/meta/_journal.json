@@ -8,6 +8,13 @@
       "when": 1772987216057,
       "tag": "0000_keen_power_man",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773022629182,
+      "tag": "0001_perpetual_blockbuster",
+      "breakpoints": true
     }
   ]
 }
