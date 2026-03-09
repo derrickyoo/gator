@@ -26,7 +26,7 @@ async function main() {
   registerCommand(commandsRegistry, "reset", handlerReset);
   registerCommand(commandsRegistry, "users", handlerListUsers);
   registerCommand(commandsRegistry, "agg", handlerAggregate);
-  registerCommand(commandsRegistry, "addFeed", handlerAddFeed);
+  registerCommand(commandsRegistry, "addfeed", handlerAddFeed);
 
   try {
     await runCommand(commandsRegistry, cmdName, ...cmdArgs);

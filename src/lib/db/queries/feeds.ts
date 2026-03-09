@@ -1,8 +1,9 @@
 import { db } from "../index.js";
 import { feeds, NewFeed } from "../schema.js";
+import { firstOrUndefined } from "./utils.js";
 
-export async function addFeed(newFeed: NewFeed) {
-  const [result] = await db.insert(feeds).values(newFeed).returning();
+export async function createFeed(feed: NewFeed) {
+  const result = await db.insert(feeds).values(feed).returning();
 
-  return result;
+  return firstOrUndefined(result);
 }

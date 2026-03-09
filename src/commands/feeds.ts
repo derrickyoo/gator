@@ -1,5 +1,42 @@
+import { readConfig } from "../config.js";
+import { createFeed } from "../lib/db/queries/feeds.js";
+import { getUser } from "../lib/db/queries/users.js";
+import { Feed, User } from "../lib/db/schema.js";
+
 export async function handlerAddFeed(cmdName: string, ...args: string[]) {
-  if (args.length > 2) {
-    throw new Error(`usage: ${cmdName} <name> <url>`);
+  const config = readConfig();
+  if (args.length !== 2) {
+    throw new Error(`usage: ${cmdName} <feed_name> <url>`);
   }
+
+  const [name, url] = args;
+
+  const { currentUserName } = config;
+  const user = await getUser(currentUserName);
+  if (!user) {
+    throw new Error(`user ${currentUserName} not found`);
+  }
+  const { id: userId } = user;
+
+  const feed = await createFeed({
+    name,
+    url,
+    userId,
+  });
+
+  if (!feed) {
+    throw new Error("failed to create feed");
+  }
+
+  console.log("🎉 feed created sucessfully");
+  printFeed(feed, user);
+}
+
+function printFeed(feed: Feed, user: User) {
+  console.log(`* ID:            ${feed.id}`);
+  console.log(`* Created:       ${feed.createdAt}`);
+  console.log(`* Updated:       ${feed.updatedAt}`);
+  console.log(`* name:          ${feed.name}`);
+  console.log(`* URL:           ${feed.url}`);
+  console.log(`* User:          ${user.name}`);
 }
