@@ -22,6 +22,13 @@
       "when": 1773033668771,
       "tag": "0002_dry_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1773094216409,
+      "tag": "0003_classy_agent_brand",
+      "breakpoints": true
     }
   ]
 }
