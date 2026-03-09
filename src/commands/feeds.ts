@@ -5,20 +5,17 @@ import { getUser, getUserById } from "../lib/db/queries/users.js";
 import { Feed, User } from "../lib/db/schema.js";
 import { printFeedFollow } from "./feed-follows.js";
 
-export async function handlerAddFeed(cmdName: string, ...args: string[]) {
+export async function handlerAddFeed(
+  cmdName: string,
+  user: User,
+  ...args: string[]
+) {
   const config = readConfig();
   if (args.length !== 2) {
     throw new Error(`usage: ${cmdName} <feed_name> <feed_url>`);
   }
 
   const [name, url] = args;
-
-  const { currentUserName } = config;
-  const user = await getUser(currentUserName);
-  if (!user) {
-    throw new Error(`user ${currentUserName} not found`);
-  }
-
   const feed = await createFeed({
     name,
     url,

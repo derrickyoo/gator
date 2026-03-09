@@ -6,19 +6,16 @@ import {
 import { getFeedByURL } from "../lib/db/queries/feeds.js";
 
 import { getUser } from "../lib/db/queries/users.js";
+import { User } from "../lib/db/schema.js";
 
-export async function handlerFollow(cmdName: string, ...args: string[]) {
+export async function handlerFollow(
+  cmdName: string,
+  user: User,
+  ...args: string[]
+) {
   if (args.length !== 1) {
     throw new Error("usage: follow <feed_url>");
   }
-
-  const config = readConfig();
-  const { currentUserName } = config;
-  const user = await getUser(currentUserName);
-  if (!user) {
-    throw new Error(`user ${currentUserName} not found`);
-  }
-
   const feedURL = args[0];
   const feed = await getFeedByURL(feedURL);
   if (!feed) {
@@ -34,14 +31,11 @@ export async function handlerFollow(cmdName: string, ...args: string[]) {
   printFeedFollow(feedFollow.username, feedFollow.feedName);
 }
 
-export async function handlerListFeedFollows(_: string) {
-  const config = readConfig();
-  const { currentUserName } = config;
-  const user = await getUser(currentUserName);
-  if (!user) {
-    throw new Error(`user ${currentUserName} not found`);
-  }
-
+export async function handlerListFeedFollows(
+  _: string,
+  user: User,
+  __: string,
+) {
   const feedFollows = await getFeedFollowsForUser(user.id);
   if (feedFollows.length === 0) {
     console.log(`No feed follows found for this user.`);
