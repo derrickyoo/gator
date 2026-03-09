@@ -54,7 +54,7 @@ export async function handlerListFeedFollows(_: string) {
   }
 }
 
-function printFeedFollow(username: string, feedname: string) {
+export function printFeedFollow(username: string, feedname: string) {
   console.log(`* User:          ${username}`);
   console.log(`* Feed:          ${feedname}`);
 }
