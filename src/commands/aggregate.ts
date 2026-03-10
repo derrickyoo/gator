@@ -50,6 +50,10 @@ async function scrapeFeed(feed: Feed) {
 
     const now = new Date();
 
+    let pubDate: Date | null = new Date(item.pubDate);
+    if (isNaN(pubDate.getTime())) {
+      pubDate = null;
+    }
     await createPost({
       url: item.link,
       feedId: feed.id,
@@ -57,7 +61,7 @@ async function scrapeFeed(feed: Feed) {
       createdAt: now,
       updatedAt: now,
       description: item.description,
-      publishedAt: new Date(item.pubDate),
+      publishedAt: pubDate,
     } satisfies NewPost);
   }
 
