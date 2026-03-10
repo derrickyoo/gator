@@ -1,16 +1,31 @@
-import { getNextFeedToFetch } from "../lib/db/queries/feeds.js";
+import {
+  getNextFeedToFetch,
+  markFeedFetched,
+} from "../lib/db/queries/feeds.js";
 import type { Feed } from "../lib/db/schema.js";
 import { fetchFeed } from "../lib/rss.js";
+import { parseDuration } from "../lib/time.js";
 
 export async function handlerAggregate(cmdName: string, ...args: string[]) {
-  // if (args.length !== 1) {
-  //   throw new Error(`usage: ${cmdName} <feed_url>`);
-  // }
+  if (args.length !== 1) {
+    throw new Error(`usage: ${cmdName} <time_between_reqs>`);
+  }
 
-  const feedURL = args[0] ?? "https://www.wagslane.dev/index.xml";
-  const RSSFeed = await fetchFeed(feedURL);
+  const time = args[0];
+  const timeBetweenRequests = parseDuration(time);
+  console.log(`Collecting feeds every ${time}...`);
 
-  console.log(JSON.stringify(RSSFeed, null, 2));
+  const interval = setInterval(() => {
+    scrapeFeeds().catch(handleError);
+  }, timeBetweenRequests);
+
+  await new Promise<void>((resolve) => {
+    process.on("SIGINT", () => {
+      console.log("Shutting down feed aggregator...");
+      clearInterval(interval);
+      resolve();
+    });
+  });
 }
 
 async function scrapeFeeds() {
@@ -24,6 +39,8 @@ async function scrapeFeeds() {
 }
 
 async function scrapeFeed(feed: Feed) {
+  await markFeedFetched(feed.id);
+
   const feedData = await fetchFeed(feed.url);
 
   const items = feedData.channel.item;
@@ -33,5 +50,11 @@ async function scrapeFeed(feed: Feed) {
 
   console.log(
     `feed ${feed.name} collected, ${feedData.channel.item.length} posts found`,
+  );
+}
+
+function handleError(err: unknown) {
+  console.error(
+    `Error scraping feeds: ${err instanceof Error ? err.message : err}`,
   );
 }
